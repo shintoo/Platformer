@@ -21,6 +21,8 @@ Texture * New_Texture(SDL_Renderer *renderer, char *path) {
 		return NULL;
 	}
 
+	SDL_SetColorKey(ImageSurface, SDL_TRUE, SDL_MapRGB(ImageSurface->format, 0, 255, 255));
+
 	/* Create a texture from the loaded surface */
 	ret->texture = SDL_CreateTextureFromSurface(renderer, ImageSurface);
 	if (!ret->texture) {
