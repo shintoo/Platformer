@@ -9,6 +9,7 @@
 #ifndef OBJECT_H_
 #define OBJECT_H_
 
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "texture.h"
 #include "spritesheet.h"
@@ -49,6 +50,8 @@ typedef struct {
 	                        * impermeable. This will only be used for objects
 	                        * such as level blocks, walls, etc.
 	                        */
+	
+	int sprite_index;      /* The index of the current sprite in animations[animation] */
 
 } Object;
 
@@ -56,18 +59,31 @@ typedef struct {
  * width, and height.
  */
 Object * New_Object(
-	Texture *spritesheet, /* A spritesheet already created. See "texture.h" */
+	Spritesheet *spritesheet, /* A spritesheet already created. See "texture.h" */
 	int x,                /* The original x-position of the object.         */
 	int y,                /* The original y-location of the object.         */
 	int w,                /* The width of the object.                       */
-	int h                 /* The height of the object.                      */
+	int h,                /* The height of the object.                      */
+	bool collision,       /* Whether the object is an impermeable block     */
+	int default_sprite
 );
+
+/* Destroy an object */
+void Destroy_Object(Object *o);
 
 /* Draw the object onto the renderer using the object's location,
  * and current sprite
  */
-void Object_Render(Object *object, SDL_Renderer *renderer, int sprite_index);
+void Object_Render(Object *object, SDL_Renderer *renderer);
 
-/* Load an object's spritesheet
-void Object_LoadSpritesheet(Object *object, int w, int h);
+/* Set the animation of an object. Typically, an enum for an animation specific
+ * to the object type will be used.
+ */
+void Object_SetAnimation(Object *o, int animation);
+
+/* Increment the current sprite of the object to the next sprite in the
+ * animation, resetting to the first sprite of the animation when the
+ * sprite passes the final sprite of the animation.
+ */
+void Object_NextSprite(Object *o);
 #endif
