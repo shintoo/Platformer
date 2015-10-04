@@ -13,17 +13,6 @@
 #include "texture.h"
 #include "spritesheet.h"
 
-/* A spritesheet for an object */
-typedef struct {
-	Texture *texture,          /* The actual spritesheet for the object */
-	int animations;            /* The amount of animations in a spritesheet */
-	int *frames_in_animation;  /* An array, each member denoting how many frames
-	                            * are in an animation. For example, if
-	                            * frames_in_animation[3] is 5, then an object's
-	                            * fourth animation has 5 different frames.
-	                            */
-} Spritesheet;
-
 /* The Object struct */
 typedef struct {
 	Spritesheet *spritesheet;  /* Each type of object has a spritesheet, all objects
