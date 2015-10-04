@@ -2,7 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "object.h"
+#include "objecttype.h"
 #include "spritesheet.h"
 #include "texture.h"
 
@@ -16,11 +16,12 @@ int main(void) {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	Texture *background;
-	Object *object;
-	int animation = 0;
 	SDL_Event e;
+	SDL_Rect Camera = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 	int frame = 1;
 	bool running = true;
+
+	ObjectType *brickType;
 
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_PNG);
@@ -28,22 +29,27 @@ int main(void) {
 	window = MakeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
 	renderer = MakeRenderer(window);
 
-	/* I have created a monster */
-	object = New_Object(
+	/* Create a new type of object - the brick */
+	brickType = New_ObjectType(
 		New_Spritesheet(
 			New_Texture(
-				renderer, /* The rendering context */
-				"img/spritesheet.png" /* Path to spritesheet image */
+				renderer,
+				"img/brick.png"
 			),
-			4, /* The number of animations in the spritesheet */
-			4, 4, 4, 4 /* How many frames are in each animation */
+			1,
+			1
 		),
-		64, 64, 48, 80, /* The position x, y and size width, height of object */
-		true, /* If the object has impermeable collision */
-		0 /* The default sprite animation of the object */
+		true,
+		64,
+		64
 	);
 
-	background = New_Texture(renderer, "img/background.png");
+	/* Create a line of 10 bricks */
+	for (int i = 0; i < 10; i++) { /*   x              y */
+		ObjectType_AddObject(brickType, 64 + (64 * i), 256, 0, 0);
+	}
+
+	background = New_Texture(renderer, "img/big3d.png");
 
 	while (running) {
 		while (SDL_PollEvent(&e) != 0) {
@@ -52,7 +58,7 @@ int main(void) {
 					case SDLK_q:
 						running = false;
 					break;
-					case SDLK_DOWN:
+/*					case SDLK_DOWN:
 						animation = 0;
 					break;
 					case SDLK_LEFT:
@@ -64,9 +70,10 @@ int main(void) {
 					case SDLK_UP:
 						animation = 3;
 					break;
-				}
+*/				}
 			}
 		}
+		SDL_RenderSetViewport(renderer, &Camera);
 
 		/* Clear the screen */
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -74,22 +81,29 @@ int main(void) {
 
 		/* Render the background */
 		Texture_Render(background, renderer, 0, 0);
+
 		/* Render the object */
-		Object_Render(object, renderer);
+		for (int i = 0; i < 10; i++) {
+			ObjectType_RenderObject(brickType, renderer, i);
+		}
+
+
+/*		if (frame % 10 == 0) {
+			for (int i = 0; i < 10; i++) {
+				ObjectType_ObjectNextSprite(brickType, i);
+			}
+		}
+*/
+
 		SDL_RenderPresent(renderer);
 
-
-		if (frame % 10 == 0) {
-			Object_NextSprite(object);
-		}
-		Object_SetAnimation(object, animation);
 
 		SDL_Delay(16);
 		frame++;
 	}
 
 	Destroy_Texture(background);
-	Destroy_Object(object);
+	Destroy_ObjectType(brickType);
 
 	SDL_Quit();
 	IMG_Quit();
