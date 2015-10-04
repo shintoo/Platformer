@@ -9,25 +9,57 @@
 #ifndef OBJECT_H_
 #define OBJECT_H_
 
+#include <SDL2/SDL.h>
 #include "texture.h"
+#include "spritesheet.h"
+
+/* A spritesheet for an object */
+typedef struct {
+	Texture *texture,          /* The actual spritesheet for the object */
+	int animations;            /* The amount of animations in a spritesheet */
+	int *frames_in_animation;  /* An array, each member denoting how many frames
+	                            * are in an animation. For example, if
+	                            * frames_in_animation[3] is 5, then an object's
+	                            * fourth animation has 5 different frames.
+	                            */
+} Spritesheet;
 
 /* The Object struct */
 typedef struct {
-	Texture *spritesheet; /* Each type of object has a spritesheet, all objects
-	                       * of the same type have their spritesheet member set
-	                       * to the same value.
-	                       */
+	Spritesheet *spritesheet;  /* Each type of object has a spritesheet, all objects
+	                            * of the same type have their spritesheet member set
+	                            * to the same value.
+	                            */
 
-	SDL_Rect rect;        /* .x, .y: The position/location of the object;
-	                       * .w, .h: The dimensions (width and height) of the
-	                       * object
-	                       */
+	SDL_Rect **animations; /* A 2-dimensional, possible jagged, array of rects.
+	                        * Each rect is a source rectangle clip for the
+	                        * spritesheet. If an object has 4 animations,
+	                        * animations[0 through 3] are each animation.
+	                        * For example, animations[1] is an object's
+	                        * second animation, and animations[1][2] is
+	                        * the third sprite of the object's second
+	                        * animation.
+	                        */
 
-	bool collision;       /* collision can either be true or false. If true,
-	                       * the entire area encapsulated by the object is
-	                       * impermeable. This will only be used for objects
-	                       * such as level blocks, walls, etc.
-	                       */
+	int animation;         /* The current animation of the object. This will
+	                        * be used as the index for animations to determine
+	                        * which animation to play. For example, if
+	                        * animation is 3, then animations[3] wil be
+	                        * played.
+	                        */
+
+	SDL_Rect dstrect;      /* The destination rectangle for the object - where
+	                        * it is going to be rendered.
+	                        * .x, .y: The position/location of the object;
+	                        * .w, .h: The dimensions (width and height) of the
+	                        * object
+	                        */
+
+	bool collision;        /* collision can either be true or false. If true,
+	                        * the entire area encapsulated by the object is
+	                        * impermeable. This will only be used for objects
+	                        * such as level blocks, walls, etc.
+	                        */
 
 } Object;
 
@@ -43,11 +75,10 @@ Object * New_Object(
 );
 
 /* Draw the object onto the renderer using the object's location,
- * size, and spritesheet. If sprite_index is greater than 0, this function
- * will traverse the sprite sheet and render the appropriate sprite. For
- * instance, an object with a spritesheet that has 4 sprites on it can
- * be rendered using the last sprite with a sprite_index equal to 3.
+ * and current sprite
  */
-void Object_Render(SDL_Renderer *renderer, Object *object, int sprite_index);
+void Object_Render(Object *object, SDL_Renderer *renderer, int sprite_index);
 
-
+/* Load an object's spritesheet
+void Object_LoadSpritesheet(Object *object, int w, int h);
+#endif
