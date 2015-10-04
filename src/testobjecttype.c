@@ -44,7 +44,7 @@ int main(void) {
 		64
 	);
 
-	/* Create a line of 10 bricks */
+	/* Create a line of 10 bricks from (64, 256) to (640, 256) */
 	for (int i = 0; i < 10; i++) { /*   x              y */
 		ObjectType_AddObject(brickType, 64 + (64 * i), 256, 0, 0);
 	}

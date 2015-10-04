@@ -78,12 +78,19 @@ void ObjectType_ObjectNextSprite(ObjectType *o, int instance_index) {
 
 /* Render an instance of ObjectType */
 void ObjectType_RenderObject(ObjectType *ot, SDL_Renderer *renderer, int instance_index) {
+	SDL_Rect srcrect = ot->animations[ot->instances[instance_index].animation][ot->instances[instance_index].sprite_index];
+	SDL_Rect dstrect = ot->instances[instance_index].dstrect;
+	printf("source rect: {x: %d, y: %d, w: %d, h: %d}\n", srcrect.x, srcrect.y, srcrect.w, srcrect.h);
+	printf("destin rect: {x: %d, y: %d, w: %d, h: %d}\n", dstrect.x, dstrect.y, dstrect.w, dstrect.h);
+
+
 	SDL_RenderCopy(
 		renderer,
 		ot->spritesheet->texture->texture,
 		&ot->animations[ot->instances[instance_index].animation][ot->instances[instance_index].sprite_index],
 		&ot->instances[instance_index].dstrect
 	);
+	printf("Rendererd %d\n", instance_index);
 }
 
 /* Destroy an ObjectType and all of its sub parts */
