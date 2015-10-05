@@ -34,10 +34,10 @@ int main(void) {
 		New_Spritesheet(
 			New_Texture(
 				renderer,
-				"img/brick.png"
+				"src/img/brick.png"
 			),
 			1,
-			4
+			20
 		),
 		true,
 		64,
@@ -45,11 +45,11 @@ int main(void) {
 	);
 
 	/* Create a line of 10 bricks from (64, 256) to (640, 256) */
-	for (int i = 0; i < 10; i++) { /*   x              y */
+	for (int i = 0; i < 7; i++) { /*   x              y */
 		ObjectType_AddObject(brickType, 64 + (64 * i), 256, 0, 0);
 	}
 
-	background = New_Texture(renderer, "img/background.png");
+	background = New_Texture(renderer, "src/img/sky.png");
 
 	while (running) {
 		while (SDL_PollEvent(&e) != 0) {
@@ -83,20 +83,18 @@ int main(void) {
 		Texture_Render(background, renderer, 0, 0);
 
 		/* Render the object */
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 7; i++) {
 			ObjectType_RenderObject(brickType, renderer, i);
 		}
 
 
 		if (frame % 10 == 0) {
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 7; i++) {
 				ObjectType_ObjectNextSprite(brickType, i);
 			}
 		}
 
-
 		SDL_RenderPresent(renderer);
-
 
 		SDL_Delay(16);
 		frame++;
