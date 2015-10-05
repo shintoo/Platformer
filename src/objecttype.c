@@ -93,6 +93,11 @@ void ObjectType_AddObject(ObjectType *ot, int x, int y, int default_animation, i
 	ot->instance_count++;
 }
 
+/* Returns the omount of objects in an object type */
+//int ObjectType_Count(ObjectType *ot) {
+//	return ot->instance_count;
+//}
+
 /* Set the animation for an object */
 void ObjectType_SetObjectAnimation(ObjectType *ot, int instance_index, int animation) {
 	ot->instances[instance_index].animation = animation;

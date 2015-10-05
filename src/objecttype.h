@@ -127,6 +127,11 @@ void ObjectType_AddObject(
 	int default_sprite     /* The default sprite of the animation of the object */
 );
 
+/* Return the count of object in an ObjectType */
+//int ObjectType_Count(ObjectType *ot);
+
+#define ObjectType_Count(OT) (OT)->instance_count
+
 /* Remove an object from the list of instances */
 void ObjectType_RemoveObject(int instance_index);
 
