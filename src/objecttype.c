@@ -78,7 +78,7 @@ void ObjectType_ObjectNextSprite(ObjectType *o, int instance_index) {
 	o->instances[instance_index].sprite_index++;
 
 	/* If the sprite index of the instance is greater than the instance's current animation's size, restart the animation */
-	if (o->instances[instance_index].sprite_index > o->spritesheet->frames_in_animation[o->instances[instance_index].animation]) {
+	if (o->instances[instance_index].sprite_index >= o->spritesheet->frames_in_animation[o->instances[instance_index].animation]) {
 		o->instances[instance_index].sprite_index = 0;
 	}
 }

@@ -37,7 +37,7 @@ int main(void) {
 				"img/brick.png"
 			),
 			1,
-			1
+			4
 		),
 		true,
 		64,
@@ -88,12 +88,12 @@ int main(void) {
 		}
 
 
-/*		if (frame % 10 == 0) {
+		if (frame % 10 == 0) {
 			for (int i = 0; i < 10; i++) {
 				ObjectType_ObjectNextSprite(brickType, i);
 			}
 		}
-*/
+
 
 		SDL_RenderPresent(renderer);
 
