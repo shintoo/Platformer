@@ -20,8 +20,9 @@ ObjectType * New_ObjectType(
 		return NULL;
 	}
 
-	/* Assign the passed values */
 	ret->spritesheet = spritesheet;
+	ret->size.w = w;
+	ret->size.h = h;
 
 	/* Create the animations for the object */
 	/* Make the animations list */
@@ -37,9 +38,11 @@ ObjectType * New_ObjectType(
 		}
 	}
 
-	ret->instance_count = 0;
+	/* Create room for 2 instances - this can be increased when objects are added */
+	ret->instances = malloc(2 * sizeof(Object));
 	ret->instances_size = 2;
-	ret->instances = malloc(sizeof(Object) * 2);
+	ret->instance_count = 0;
+
 	return ret;
 }
 
@@ -48,16 +51,20 @@ void ObjectType_AddObject(ObjectType *ot, int x, int y, int default_animation, i
 	/* Make sure ot->instances is large enough to have another object */
 	if (ot->instance_count >= ot->instances_size - 1) {
 		/* Double the size of ot->instances */
-		ot->instances = realloc(ot->instances, ot->instances_size * 2);
+		ot->instances = realloc(ot->instances, ot->instances_size * 2 * sizeof(Object));
 		ot->instances_size *= 2;
 	}
 	/* Copy the passed initial position */
 	ot->instances[ot->instance_count].dstrect.x = x;
 	ot->instances[ot->instance_count].dstrect.y = y;
+	ot->instances[ot->instance_count].dstrect.w = ot->size.w;
+	ot->instances[ot->instance_count].dstrect.h = ot->size.h;
+
 
 	/* Copy the passed initial animation and initial sprite */
 	ot->instances[ot->instance_count].animation = default_animation;
 	ot->instances[ot->instance_count].sprite_index = default_sprite;
+	ot->instance_count++;
 }
 
 /* Set the animation for an object */
@@ -78,19 +85,12 @@ void ObjectType_ObjectNextSprite(ObjectType *o, int instance_index) {
 
 /* Render an instance of ObjectType */
 void ObjectType_RenderObject(ObjectType *ot, SDL_Renderer *renderer, int instance_index) {
-	SDL_Rect srcrect = ot->animations[ot->instances[instance_index].animation][ot->instances[instance_index].sprite_index];
-	SDL_Rect dstrect = ot->instances[instance_index].dstrect;
-	printf("source rect: {x: %d, y: %d, w: %d, h: %d}\n", srcrect.x, srcrect.y, srcrect.w, srcrect.h);
-	printf("destin rect: {x: %d, y: %d, w: %d, h: %d}\n", dstrect.x, dstrect.y, dstrect.w, dstrect.h);
-
-
 	SDL_RenderCopy(
 		renderer,
 		ot->spritesheet->texture->texture,
 		&ot->animations[ot->instances[instance_index].animation][ot->instances[instance_index].sprite_index],
 		&ot->instances[instance_index].dstrect
 	);
-	printf("Rendererd %d\n", instance_index);
 }
 
 /* Destroy an ObjectType and all of its sub parts */

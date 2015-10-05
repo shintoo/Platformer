@@ -49,7 +49,7 @@ int main(void) {
 		ObjectType_AddObject(brickType, 64 + (64 * i), 256, 0, 0);
 	}
 
-	background = New_Texture(renderer, "img/big3d.png");
+	background = New_Texture(renderer, "img/background.png");
 
 	while (running) {
 		while (SDL_PollEvent(&e) != 0) {

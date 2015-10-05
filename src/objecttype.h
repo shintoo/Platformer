@@ -85,6 +85,11 @@ typedef struct _objecttype{
 
 	int instances_size;    /* The amount of memory currently held by instances */
 
+	struct {
+		int w;
+		int h;
+	} size;                /* The size, used for the dstrect for objects etc */
+
 } ObjectType;
 
 /* Functions for ObjectType */
