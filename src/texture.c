@@ -56,7 +56,7 @@ void Destroy_Texture(Texture *T) {
 }
 
 /* Render a texture by itself - probably won't ever be used */
-void Texture_Render(Texture *t, SDL_Renderer *r, int x, int y) {
+void Texture_Render(Texture *t, SDL_Renderer *r, int x, int y, SDL_Rect *Camera) {
 	SDL_Rect renderQuad = {
 		x,
 		y,

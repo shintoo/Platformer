@@ -27,6 +27,6 @@ Texture * New_Texture(SDL_Renderer *r, char *path);
 void Destroy_Texture(Texture *t);
 
 /* Render a texture at a position */
-void Texture_Render(Texture *t, SDL_Renderer *r, int x, int y);
+void Texture_Render(Texture *t, SDL_Renderer *r, int x, int y, SDL_Rect *Camera);
 
 #endif
