@@ -54,11 +54,37 @@ void ObjectType_AddObject(ObjectType *ot, int x, int y, int default_animation, i
 		ot->instances = realloc(ot->instances, ot->instances_size * 2 * sizeof(Object));
 		ot->instances_size *= 2;
 	}
+
+	SDL_Rect *dstrect = &ot->instances[ot->instance_count].dstrect;
 	/* Copy the passed initial position */
-	ot->instances[ot->instance_count].dstrect.x = x;
-	ot->instances[ot->instance_count].dstrect.y = y;
-	ot->instances[ot->instance_count].dstrect.w = ot->size.w;
-	ot->instances[ot->instance_count].dstrect.h = ot->size.h;
+	dstrect->x = x;
+	dstrect->y = y;
+	dstrect->w = ot->size.w;
+	dstrect->h = ot->size.h;
+
+	SDL_Rect *hitboxes = ot->instances[ot->instance_count].hitboxes;
+	/* Create the 4 (top, left, right, bottom) hitboxes */
+	/* Make a crafty loop for this at some point */
+	hitboxes[TOP_HITBOX].x = x;
+	hitboxes[TOP_HITBOX].y = y;
+	hitboxes[TOP_HITBOX].w = ot->size.w;
+	hitboxes[TOP_HITBOX].h = 2;
+
+	hitboxes[LEFT_HITBOX].x = x;
+	hitboxes[LEFT_HITBOX].y = y;
+	hitboxes[LEFT_HITBOX].w = 2;
+	hitboxes[LEFT_HITBOX].h = ot->size.h;
+
+	hitboxes[RIGHT_HITBOX].x = x + ot->size.w - 2;
+	hitboxes[RIGHT_HITBOX].y = y;
+	hitboxes[RIGHT_HITBOX].w = 2;
+	hitboxes[RIGHT_HITBOX].h = ot->size.h;
+
+	hitboxes[BOTTOM_HITBOX].x = x;
+	hitboxes[BOTTOM_HITBOX].y = y + ot->size.h - 2;
+	hitboxes[BOTTOM_HITBOX].w = ot->size.w;
+	hitboxes[BOTTOM_HITBOX].h = 2;	
+
 
 
 	/* Copy the passed initial animation and initial sprite */
@@ -84,12 +110,20 @@ void ObjectType_ObjectNextSprite(ObjectType *o, int instance_index) {
 }
 
 /* Render an instance of ObjectType */
-void ObjectType_RenderObject(ObjectType *ot, SDL_Renderer *renderer, int instance_index) {
+void ObjectType_RenderObject(ObjectType *ot, SDL_Renderer *renderer, int instance_index, SDL_Rect *Camera) {
+	SDL_Rect *objectrefrect = &ot->instances[instance_index].dstrect;
+	SDL_Rect dstrect = {
+		objectrefrect->x - Camera->x,
+		objectrefrect->y - Camera->y,
+		objectrefrect->w,
+		objectrefrect->h
+	};
+	
 	SDL_RenderCopy(
 		renderer,
 		ot->spritesheet->texture->texture,
 		&ot->animations[ot->instances[instance_index].animation][ot->instances[instance_index].sprite_index],
-		&ot->instances[instance_index].dstrect
+		&dstrect
 	);
 }
 

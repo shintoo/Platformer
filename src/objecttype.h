@@ -26,6 +26,13 @@
 #include "texture.h"
 #include "spritesheet.h"
 
+enum {
+	TOP_HITBOX,
+	LEFT_HITBOX,
+	RIGHT_HITBOX,
+	BOTTOM_HITBOX
+};
+
 /* The Object struct - an instance of an ObjectType */
 typedef struct _object {
 	SDL_Rect dstrect;     /* The destination rectangle for the object - where
@@ -34,6 +41,8 @@ typedef struct _object {
 	                        * .w, .h: The dimensions (width and height) of the
 	                        * object
 	                        */
+
+	SDL_Rect hitboxes[4];  /* Top, left, right, and bottom hitboxes */ 
 
 	int sprite_index;      /* The index of the current sprite in the Object's
 	                        * ObjectType's animations[animation] */
@@ -48,7 +57,7 @@ typedef struct _object {
 } Object;
 
 /* The ObjectType struct */
-typedef struct _objecttype{
+typedef struct _objecttype {
 	Spritesheet *spritesheet;  /* Each type of object has a spritesheet, all objects
 	                            * of the same type have their spritesheet member set
 	                            * to the same value.
@@ -122,7 +131,7 @@ void ObjectType_AddObject(
 void ObjectType_RemoveObject(int instance_index);
 
 /* Render a specific instance of an ObjectType */
-void ObjectType_RenderObject(ObjectType *ot, SDL_Renderer *r, int instance_index);
+void ObjectType_RenderObject(ObjectType *ot, SDL_Renderer *r, int instance_index, SDL_Rect *Camera);
 
 /* Destroy an object */
 void Destroy_Object(Object *o);
