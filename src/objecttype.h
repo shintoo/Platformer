@@ -45,6 +45,8 @@ typedef struct _object {
 	                        * animation is 3, then animations[3] of the
 	                        * Object's ObjectType will be played.
 	                        */
+
+	SDL_Rect hitboxes[4];  /* Hitboxes for top, left, right, and bottom */
 } Object;
 
 /* The ObjectType struct */

@@ -58,22 +58,21 @@ int main(void) {
 					case SDLK_q:
 						running = false;
 					break;
-/*					case SDLK_DOWN:
-						animation = 0;
+					case SDLK_DOWN:
+						Camera.y++;
 					break;
 					case SDLK_LEFT:
-						animation = 1;
+						Camera.x--;
 					break;
 					case SDLK_RIGHT:
-						animation = 2;
+						Camera.x++;
 					break;
 					case SDLK_UP:
-						animation = 3;
+						Camera.y--;
 					break;
-*/				}
+				}
 			}
 		}
-		SDL_RenderSetViewport(renderer, &Camera);
 
 		/* Clear the screen */
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
