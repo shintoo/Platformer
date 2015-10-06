@@ -35,7 +35,7 @@ enum {
 
 /* The Object struct - an instance of an ObjectType */
 typedef struct _object {
-	SDL_Rect dstrect;     /* The destination rectangle for the object - where
+	SDL_Rect dstrect;      /* The destination rectangle for the object - where
 	                        * it is going to be rendered.
 	                        * .x, .y: The position/location of the object;
 	                        * .w, .h: The dimensions (width and height) of the
@@ -55,7 +55,6 @@ typedef struct _object {
 	                        * Object's ObjectType will be played.
 	                        */
 
-	SDL_Rect hitboxes[4];  /* Hitboxes for top, left, right, and bottom */
 } Object;
 
 /* The ObjectType struct */

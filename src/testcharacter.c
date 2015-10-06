@@ -2,7 +2,8 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "objecttype.h"
+#include "character.h"
+#include "object.h"
 #include "spritesheet.h"
 #include "texture.h"
 
@@ -24,6 +25,7 @@ int main(void) {
 	bool running = true;
 
 	ObjectType *brickType;
+	CharacterType *elfType;
 
 	const uint8_t *KeyboardState = SDL_GetKeyboardState(NULL);
 
@@ -48,6 +50,26 @@ int main(void) {
 		64
 	);
 
+	elfType = New_CharacterType(
+		New_ObjectType(
+			New_Spritesheet(
+				New_Texture(
+					renderer,
+					"src/img/elf.png"
+				),
+				4,
+				4, 4, 4, 4
+			),
+			true,
+			48,
+			80
+		),
+		true
+	);
+
+	/* Add an elf at (64, 480-64-80) */
+	CharacterType_AddCharacter(elfType, 64, 480-64-80, 2, 0);
+
 	/* Create a line of 20 bricks from (0, 480-64) to (1280, 480-64) */
 	for (int i = 0; i < 20; i++) { /*   x              y */
 		ObjectType_AddObject(brickType, (64 * i), 480 - 64, 0, 0);
@@ -63,33 +85,10 @@ int main(void) {
 	background = New_Texture(renderer, "src/img/sky.png");
 
 	while (running) {
-<<<<<<< HEAD
-		while (SDL_PollEvent(&e) != 0) {
-			if (e.type == SDL_KEYDOWN) {
-				switch(e.key.keysym.sym) {
-					case SDLK_q:
-						running = false;
-					break;
-					case SDLK_DOWN:
-						Camera.y++;
-					break;
-					case SDLK_LEFT:
-						Camera.x--;
-					break;
-					case SDLK_RIGHT:
-						Camera.x++;
-					break;
-					case SDLK_UP:
-						Camera.y--;
-					break;
-				}
-			}
-=======
 		UpdateCamera(&Camera, KeyboardState);
 
 		if (KeyboardState[SDL_SCANCODE_Q]) {
 			running = false;
->>>>>>> 67a8231c491010b3fa0f208929b85882165500cf
 		}
 
 		/* Clear the screen */
@@ -99,7 +98,10 @@ int main(void) {
 		/* Render the background */
 		Texture_Render(background, renderer, 0, 0, &Camera);
 
-		/* Render the object */
+		/* Render the character */
+		CharacterType_RenderCharacter(elfType, renderer, 0, &Camera);
+
+		/* Render the objects */
 		for (int i = 0; i < ObjectType_Count(brickType); i++) {
 			ObjectType_RenderObject(brickType, renderer, i, &Camera);
 		}
@@ -120,7 +122,8 @@ int main(void) {
 
 	Destroy_Texture(background);
 	Destroy_ObjectType(brickType);
-
+	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 	IMG_Quit();
 

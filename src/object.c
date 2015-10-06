@@ -4,7 +4,7 @@
  */
 
 #include <SDL2/SDL.h>
-#include "objecttype.h"
+#include "object.h"
 #include "texture.h"
 
 /* Create a new Object, with a spritesheet already created */
