@@ -14,8 +14,10 @@
 
 /* Traits unique to characters */
 typedef struct _character_traits {
-	uint8_t dir; /* Current direction of movement */
-	int speed; /* Current speed */
+	struct {
+		int x;
+		int y;
+	} velocity;
 } CharacterTraits;
 
 typedef struct _charactertype {
@@ -46,5 +48,11 @@ void Destroy_CharacterType(CharacterType *t);
 
 /* Kill a character - play it's death animation and destroy the instance */
 void CharacterType_KillCharacter(CharacterType *ct, int instance_index);
+
+/* Move a character with the keyboard - temporary */
+void CharacterType_MoveCharacter(CharacterType *ct, int instance_index, const uint8_t *KeyboardState);
+
+/* Update a character - temporary */
+void CharacterType_UpdateCharacter(CharacterType *ct, int instance_index, int frame);
 
 #endif

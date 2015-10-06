@@ -86,6 +86,9 @@ int main(void) {
 
 	while (running) {
 		UpdateCamera(&Camera, KeyboardState);
+		CharacterType_MoveCharacter(elfType, 0, KeyboardState);
+		CharacterType_UpdateCharacter(elfType, 0, frame);
+
 
 		if (KeyboardState[SDL_SCANCODE_Q]) {
 			running = false;
@@ -122,6 +125,7 @@ int main(void) {
 
 	Destroy_Texture(background);
 	Destroy_ObjectType(brickType);
+	Destroy_CharacterType(elfType);
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
