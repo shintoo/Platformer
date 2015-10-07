@@ -18,6 +18,11 @@ typedef struct _character_traits {
 		int x;
 		int y;
 	} velocity;
+	
+	struct {
+		int x;
+		int y;
+	} acceleration;
 } CharacterTraits;
 
 typedef struct _charactertype {

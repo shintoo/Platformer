@@ -88,16 +88,19 @@ int main(void) {
 		UpdateCamera(&Camera, KeyboardState);
 		CharacterType_MoveCharacter(elfType, 0, KeyboardState);
 		CharacterType_UpdateCharacter(elfType, 0, frame);
-
+/* write CharacterType_MovePlayerCharacter(CharacterType *ct, int instance_index, uint8_t KeyboardState)
+ * and   CharacterType_MoveNonPlayerCharacter(CharacterType *ct, int instance_index) */
 
 		if (KeyboardState[SDL_SCANCODE_Q]) {
 			running = false;
 		}
 
 		/* Clear the screen */
+		printf("%p\n", renderer);
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		printf("%p\n", renderer);
 		SDL_RenderClear(renderer);
-
+		printf("%p\n", renderer);
 		/* Render the background */
 		Texture_Render(background, renderer, 0, 0, &Camera);
 
