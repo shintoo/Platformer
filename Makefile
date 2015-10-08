@@ -2,8 +2,6 @@ CC=gcc
 LDFLAGS= -lSDL2 -lSDL2_image
 CFLAGS= -g -Wall -std=c11
 SRC= src/character.c src/object.c src/spritesheet.c src/texture.c
-MAIN= src/testcharacter.c
-
 
 object:
 	$(CC) $(CFLAGS) src/tests/testobject.c -o objecttest $(SRC) $(LDFLAGS)

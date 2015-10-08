@@ -21,6 +21,11 @@ CharacterType * New_CharacterType(ObjectType *ot, bool affected_by_gravity) {
 	ret->object_type = ot;
 	ret->affected_by_gravity = affected_by_gravity;
 
+	/* Create room for one character trait - increased when added */
+	ret->character_traits = malloc(sizeof(CharacterTraits));
+	ret->character_traits_count = 0;
+	ret->character_traits_size = 1;
+
 	/* There's not much to do here, most of everything is in the ObjectType */
 	return ret;
 }
@@ -37,21 +42,42 @@ void Destroy_CharacterType(CharacterType *ct) {
 	ct = NULL;
 }
 
+/* testing */
+void CharacterType_AddCharacter(CharacterType *ct, int x, int y, int default_animation, int default_sprite) {
+	ObjectType_AddObject(ct->object_type, x, y, default_animation, default_sprite);
+	
+	/* losing my patience with commenting rn tbh */
+	if (ct->character_traits_count >= ct->character_traits_size - 1) {
+		ct->character_traits = realloc(ct->character_traits, 2 * ct->character_traits_size * sizeof(CharacterTraits));
+		ct->character_traits_size *= 2;
+	}
+	if (ct->affected_by_gravity) {
+		ct->character_traits[ct->character_traits_count].acceleration.y = 2;
+	}
+	ct->character_traits_count++;
+}
+
 /* temporary */
 void CharacterType_MoveCharacter(CharacterType *ct, int instance_index, const uint8_t *KeyboardState) {
 	CharacterTraits *ch = &ct->character_traits[instance_index];
-	if (KeyboardState[SDL_SCANCODE_W]) {
-		ch->velocity.y -= 5;
+
+
+	if (KeyboardState[SDL_SCANCODE_SPACE]) {
+		ch->velocity.y -= 5; // jump is true
 	}
 	if (KeyboardState[SDL_SCANCODE_S]) {
-		ch->velocity.y += 5;
+		ch->velocity.y += 2;
 	}
 	if (KeyboardState[SDL_SCANCODE_A]) {
-		ch->velocity.x -= 5;
+		ch->velocity.x -= 2;
+		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 1);
 	}
 	if (KeyboardState[SDL_SCANCODE_D]) {
-		ch->velocity.x += 5;
+		ch->velocity.x += 2;
+		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 0);
 	}
+
+	ch->velocity.y += ch->acceleration.y;
 }
 
 void CharacterType_UpdateCharacter(CharacterType *ct, int instance_index, int frame) {
@@ -76,12 +102,12 @@ void CharacterType_UpdateCharacter(CharacterType *ct, int instance_index, int fr
 
 	/* Update animation for direction */
 	if (ch_traits->velocity.x < 0) {
-		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 1);
+		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 0);
 	} else if (ch_traits->velocity.x > 0) {
-		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 2);
+		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 1);
 	}
 
-	if (frame % 7 == 0) {
+	if (frame % 3 == 0) {
 		if (ch_traits->velocity.x != 0) {
 			/* Update sprite */
 			ObjectType_ObjectNextSprite(ct->object_type, instance_index);

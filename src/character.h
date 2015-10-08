@@ -15,13 +15,13 @@
 /* Traits unique to characters */
 typedef struct _character_traits {
 	struct {
-		int x;
-		int y;
+		float x;
+		float y;
 	} velocity;
 	
 	struct {
-		int x;
-		int y;
+		float x;
+		float y;
 	} acceleration;
 } CharacterTraits;
 
@@ -30,6 +30,10 @@ typedef struct _charactertype {
 
 	CharacterTraits *character_traits; /* Array of character traits for each
 	                                    *character of the type */
+
+	int character_traits_count; /* Count for traits array */
+
+	int character_traits_size; /* size of traits array */
 
 	bool affected_by_gravity; /* Whether or not the type is affected by gravity */
 
@@ -45,9 +49,9 @@ void Destroy_CharacterType(CharacterType *t);
 #define CharacterType_RenderCharacter(CT, R, II, C) ObjectType_RenderObject((CT)->object_type, (R), (II), (C))
 
 /* Add another instance of the CharacterType to the list of instances */
-#define CharacterType_AddCharacter(CT, X, Y, DA, DS) \
-	ObjectType_AddObject((CT)->object_type, (X), (Y), (DA), (DS))
-
+//#define CharacterType_AddCharacter(CT, X, Y, DA, DS) 
+//	ObjectType_AddObject((CT)->object_type, (X), (Y), (DA), (DS))
+void CharacterType_AddCharacter(CharacterType *ct, int x, int y, int default_animation, int default_sprite);
 /* Returns the count of instances of a character type */
 #define CharacterType_Count(CT) ObjectType_Count((CT)->object_type)
 
