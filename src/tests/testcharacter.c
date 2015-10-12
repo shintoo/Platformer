@@ -12,7 +12,7 @@
 
 SDL_Window * MakeWindow(int w, int h);
 SDL_Renderer * MakeRenderer(SDL_Window *window);
-void UpdateCamera(SDL_Rect *Camera, const uint8_t *KeyboardState);
+void UpdateCamera(SDL_Rect *Camera, CharacterType *ct, int instance_index);
 
 
 int main(void) {
@@ -43,14 +43,14 @@ int main(void) {
 		New_Spritesheet(
 			New_Texture(
 				renderer,
-				"src/img/brick.png"
+				"src/img/brick32.png"
 			),
 			1,
 			20
 		),
 		true,
-		64,
-		64
+		32,
+		32
 	);
 
 	/* Create a new type of character - the player */
@@ -72,15 +72,18 @@ int main(void) {
 	);
 
 	/* Create a line of 20 bricks from (0, 480-64) to (1280, 480-64) */
-	for (int i = 0; i < 20; i++) { /*   x              y */
-		ObjectType_AddObject(brickType, (64 * i), 480 - 64, 0, 0);
+	for (int k = 0; k < 3; k++) {
+		for (int i = 0; i < 20; i++) { /*   x              y */
+			ObjectType_AddObject(brickType, (31 * i), k * (31) + (480 - 32), 0, i % 20 + (2 * k));
+		}
 	}
+
 	/* Create 3 bricks in a row with a space of 128 in between each */
 	for (int i = 0; i < 3; i++) {
-		ObjectType_AddObject(brickType, 256 + (128 * i), 480 - 256, 0, 0);
+		ObjectType_AddObject(brickType, 256 + (64 * i), 480 - 128, 0, 0);
 	}
 	/* Create a brick 256 above the middle brick of the row of 3 */
-	ObjectType_AddObject(brickType, 256 + 128, 480 - 512, 0, 0);
+	ObjectType_AddObject(brickType, 256 + 64, 480 - 256, 0, 0);
 
 
 	CharacterType_AddCharacter(playerType, 64, 480 - 64 - 40, 0, 0);
@@ -88,7 +91,7 @@ int main(void) {
 	background = New_Texture(renderer, "src/img/sky.png");
 
 	while (running) {
-		UpdateCamera(&Camera, KeyboardState);
+		UpdateCamera(&Camera, playerType, 0);
 		CharacterType_MoveCharacter(playerType, 0, KeyboardState);
 		CharacterType_UpdateCharacter(playerType, 0, frame);
 		if (KeyboardState[SDL_SCANCODE_Q]) {
@@ -160,17 +163,7 @@ SDL_Renderer * MakeRenderer(SDL_Window *window) {
 	return ret;
 }
 
-void UpdateCamera(SDL_Rect *Camera, const uint8_t *KeyboardState) {
-	if (KeyboardState[SDL_SCANCODE_UP]) {
-		Camera->y -= 5;
-	}
-	if (KeyboardState[SDL_SCANCODE_DOWN]) {
-		Camera->y += 5;
-	}
-	if (KeyboardState[SDL_SCANCODE_RIGHT]) {
-		Camera->x += 5;
-	}
-	if (KeyboardState[SDL_SCANCODE_LEFT]) {
-		Camera->x -= 5;
-	}
+void UpdateCamera(SDL_Rect *Camera, CharacterType *ct, int instance_index) {
+	Camera->x = ct->object_type->instances[instance_index].dstrect.x - Camera->w / 2;
+	Camera->y = ct->object_type->instances[instance_index].dstrect.y - Camera->h / 2;
 }

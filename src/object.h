@@ -1,4 +1,4 @@
-/* objecttype.h - type definition for ObjectType
+/* object.h - type definition for ObjectType
  *
  * An object is the basic building block for anything that will be
  * part of the world. Every block, wall, character, and the player
@@ -54,6 +54,7 @@ typedef struct _object {
 	                        * animation is 3, then animations[3] of the
 	                        * Object's ObjectType will be played.
 	                        */
+
 
 } Object;
 

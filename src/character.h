@@ -23,6 +23,10 @@ typedef struct _character_traits {
 		float x;
 		float y;
 	} acceleration;
+
+	bool is_on_floor;
+	bool jumping;
+
 } CharacterTraits;
 
 typedef struct _charactertype {

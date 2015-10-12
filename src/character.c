@@ -43,12 +43,14 @@ void Destroy_CharacterType(CharacterType *ct) {
 }
 
 /* testing */
-void CharacterType_AddCharacter(CharacterType *ct, int x, int y, int default_animation, int default_sprite) {
+void CharacterType_AddCharacter(CharacterType *ct, int x, int y,
+		int default_animation, int default_sprite) {
 	ObjectType_AddObject(ct->object_type, x, y, default_animation, default_sprite);
 	
 	/* losing my patience with commenting rn tbh */
 	if (ct->character_traits_count >= ct->character_traits_size - 1) {
-		ct->character_traits = realloc(ct->character_traits, 2 * ct->character_traits_size * sizeof(CharacterTraits));
+		ct->character_traits = realloc(ct->character_traits,
+			2 * ct->character_traits_size * sizeof(CharacterTraits));
 		ct->character_traits_size *= 2;
 	}
 	if (ct->affected_by_gravity) {
@@ -61,12 +63,13 @@ void CharacterType_AddCharacter(CharacterType *ct, int x, int y, int default_ani
 void CharacterType_MoveCharacter(CharacterType *ct, int instance_index, const uint8_t *KeyboardState) {
 	CharacterTraits *ch = &ct->character_traits[instance_index];
 
-
 	if (KeyboardState[SDL_SCANCODE_SPACE]) {
-		ch->velocity.y -= 5; // jump is true
+		ch->velocity.y -= 5; // jump is true, check bool isonfloor, etc etc (call a jump function)
 	}
-	if (KeyboardState[SDL_SCANCODE_S]) {
-		ch->velocity.y += 2;
+	if (!ct->character_traits[instance_index].is_on_floor) {
+		if (KeyboardState[SDL_SCANCODE_S]) {
+			ch->velocity.y += 2;
+		}
 	}
 	if (KeyboardState[SDL_SCANCODE_A]) {
 		ch->velocity.x -= 2;
@@ -77,7 +80,6 @@ void CharacterType_MoveCharacter(CharacterType *ct, int instance_index, const ui
 		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 0);
 	}
 
-	ch->velocity.y += ch->acceleration.y;
 }
 
 void CharacterType_UpdateCharacter(CharacterType *ct, int instance_index, int frame) {
@@ -85,6 +87,11 @@ void CharacterType_UpdateCharacter(CharacterType *ct, int instance_index, int fr
 	Object *ch_object = &ct->object_type->instances[instance_index];
 	/* ch_traits are the traits of the character instance */
 	CharacterTraits *ch_traits = &ct->character_traits[instance_index];
+
+	/* Apply gravity */	
+	if (ct->affected_by_gravity) {
+		ch_traits->velocity.y += ch_traits->acceleration.y;
+	}
 
 	/* Cap velocities at +-5 */
 	if (ch_traits->velocity.x > 5) {
@@ -99,14 +106,11 @@ void CharacterType_UpdateCharacter(CharacterType *ct, int instance_index, int fr
 	if (ch_traits->velocity.y < -5) {
 		ch_traits->velocity.y = -5;
 	}
-
-	/* Update animation for direction */
-	if (ch_traits->velocity.x < 0) {
-		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 0);
-	} else if (ch_traits->velocity.x > 0) {
-		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 1);
+/*
+	if (ct->character_traits[instance_index].x == 0) {
+		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 3);
 	}
-
+*/
 	if (frame % 3 == 0) {
 		if (ch_traits->velocity.x != 0) {
 			/* Update sprite */

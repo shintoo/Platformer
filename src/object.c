@@ -145,3 +145,27 @@ void Destroy_ObjectType(ObjectType *ot) {
 	free(ot);
 	ot = NULL;
 }
+
+/* Check collision between two objects */
+int * ObjectType_CheckCollision(ObjectType *ot1, ObjectType *ot2,
+		int ii1, int ii2) {
+	/* Holds the first and second hitbox indicators
+	 * (could be {TOP_HITBOX, BOTTOM_HITBOX} if object1's top hits object2's
+	 * bottom. heh.
+	 */
+	int *ret = malloc(2 * sizeof(int));
+
+	/* Check every single combination of hitbox rectangles... efficiently... */
+	for (int i = 0; i < 4; i++) {
+		for (int k = 0; k < 4; k++) {
+			if (SDL_IntersectRect(&ot1->instances[ii1].hitboxes[k],
+					&ot2->instances[ii2].hitboxes[i], NULL)) {
+				*ret = k;
+				ret[1] = i;
+				return ret;
+			}
+		}
+	}
+
+	return NULL;
+}	
