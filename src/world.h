@@ -38,3 +38,9 @@ World * NewWorld_FromFile(char *path);
 
 /* Destroy a world */
 void Destroy_World(World *w);
+
+/* Update all of the facets in a world */
+void World_Update(World *w, int frame);
+
+/* Render all of the facets of the world */
+void World_Render(World *w, SDL_Renderer, *r SDL_Rect *Camera);
