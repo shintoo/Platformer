@@ -79,21 +79,7 @@ void CharacterType_MoveCharacter(CharacterType *ct, int instance_index, const ui
 		ch->velocity.x += 2;
 		ObjectType_SetObjectAnimation(ct->object_type, instance_index, 0);
 	}
-
-	/* Update hitbox positions */
-	hitboxes[TOP_HITBOX].x = x;
-	hitboxes[TOP_HITBOX].y = y;
-
-	hitboxes[LEFT_HITBOX].x = x;
-	hitboxes[LEFT_HITBOX].y = y;
-
-	hitboxes[RIGHT_HITBOX].x = x + ot->size.w - 2;
-	hitboxes[RIGHT_HITBOX].y = y;
-
-	hitboxes[BOTTOM_HITBOX].x = x;
-	hitboxes[BOTTOM_HITBOX].y = y + ot->size.h - 2;
 }
-
 void CharacterType_UpdateCharacter(CharacterType *ct, int instance_index, int frame) {
 	/* ch_object is the physical object of the character instance */
 	Object *ch_object = &ct->object_type->instances[instance_index];
@@ -140,20 +126,4 @@ void CharacterType_UpdateCharacter(CharacterType *ct, int instance_index, int fr
 	ch_object->dstrect.x += ch_traits->velocity.x;
 	ch_object->dstrect.y += ch_traits->velocity.y;
 
-	int x = ch_object->dstrect.x;
-	int y = ch_object->dstrect.y;
-	SDL_Rect *hitboxes = ch_object->hitboxes;
-
-	/* Update hitbox positions */
-	hitboxes[TOP_HITBOX].x = x;
-	hitboxes[TOP_HITBOX].y = y;
-
-	hitboxes[LEFT_HITBOX].x = x;
-	hitboxes[LEFT_HITBOX].y = y;
-
-	hitboxes[RIGHT_HITBOX].x = x + ot->size.w - 2;
-	hitboxes[RIGHT_HITBOX].y = y;
-
-	hitboxes[BOTTOM_HITBOX].x = x;
-	hitboxes[BOTTOM_HITBOX].y = y + ot->size.h - 2;
 }
